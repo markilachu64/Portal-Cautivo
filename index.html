@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Cautivo - Grupo ARI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0d0d0d;
+            --bg-light: #ffffff;
+            --primary-green: #60c153;
+            --primary-green-alpha: rgba(96, 193, 83, 0.15);
+            --text-dark: #1a1a1a;
+            --text-muted: #737373;
+            --input-bg: #f5f5f5;
+            --border-color: #e5e5e5;
+            --font-main: 'Lexend', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+        }
+
+        body, html {
+            height: 100%;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor Principal */
+        .portal-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            max-height: 750px;
+            background: var(--bg-light);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            transition: all 0.5s ease;
+        }
+
+        /* --- SECCIÓN IZQUIERDA (OSCURA) --- */
+        .brand-side {
+            flex: 1;
+            background: linear-gradient(145deg, #0a0a0a 0%, #141414 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        /* Líneas estéticas de fondo */
+        .brand-side::before, .brand-side::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 150%;
+            background: linear-gradient(to bottom, transparent, var(--primary-green), transparent);
+            opacity: 0.15;
+            transform: rotate(15deg);
+        }
+        .brand-side::before { left: 20%; top: -20%; }
+        .brand-side::after { left: 25%; top: -10%; }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 40px;
+            z-index: 2;
+        }
+
+        .logo-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .logo-title span {
+            color: var(--primary-green);
+            font-weight: 300;
+        }
+
+        .badge-red {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(96, 193, 83, 0.3);
+            color: var(--primary-green);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .badge-red::before {
+            content: '•';
+            font-size: 1.2rem;
+        }
+
+        .welcome-text-left {
+            text-align: center;
+            max-width: 320px;
+            z-index: 2;
+        }
+
+        .welcome-text-left h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .welcome-text-left p {
+            color: #a3a3a3;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        /* Indicadores de estado de abajo */
+        .status-indicators {
+            display: flex;
+            gap: 24px;
+            margin-top: 60px;
+            z-index: 2;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #ffffff; /* Todos los textos en blanco porque están activos */
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            gap: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary-green); /* Todos los puntos verdes por defecto */
+            border-radius: 50%;
+            /* Animación de la ola */
+            animation: waveEffect 1.5s ease-in-out infinite;
+        }
+
+        /* Retrasos secuenciales para crear la ola */
+        .status-indicators .status-item:nth-child(1) .status-dot {
+            animation-delay: 0s;
+        }
+        .status-indicators .status-item:nth-child(2) .status-dot {
+            animation-delay: 0.2s;
+        }
+        .status-indicators .status-item:nth-child(3) .status-dot {
+            animation-delay: 0.4s;
+        }
+
+        /* Definición de la animación de la ola con resplandor verde */
+        @keyframes waveEffect {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+                box-shadow: 0 0 0px rgba(96, 193, 83, 0);
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+                box-shadow: 0 0 10px var(--primary-green); /* Efecto neón al crecer */
+            }
+        }
+
+
+        /* --- SECCIÓN DERECHA (FORMULARIO / LOGIN) --- */
+        .form-side {
+            flex: 1.2;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--bg-light);
+            position: relative;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Selector de Rol */
+        .role-selector {
+            display: flex;
+            background: var(--input-bg);
+            padding: 6px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            gap: 4px;
+        }
+
+        .role-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .role-btn.active {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        #btn-empleado.active {
+            background: #eaf7e9;
+            color: #2b7520;
+            border: 1px solid rgba(96, 193, 83, 0.3);
+        }
+
+        /* Inputs */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            background: var(--bg-light);
+            box-shadow: 0 0 0 4px var(--primary-green-alpha);
+        }
+
+        /* Cuadro de Términos con SCROLL */
+        .terms-box {
+            width: 100%;
+            height: 90px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            overflow-y: scroll;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .terms-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .terms-box::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 4px;
+        }
+
+        /* Botón Conectar */
+        .btn-connect {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(96, 193, 83, 0.2);
+        }
+
+        .btn-connect:hover {
+            background: #52b046;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(96, 193, 83, 0.3);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+
+        /* Botón Temporal */
+        .btn-temporal {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-temporal:hover {
+            background: var(--input-bg);
+            border-color: #ccc;
+        }
+
+        /* --- PANTALLA DE ÉXITO --- */
+        .success-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #eaf7e9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-size: 2.5rem;
+            margin-bottom: 24px;
+            border: 2px solid var(--primary-green);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsivo para móviles */
+        @media (max-width: 900px) {
+            .portal-container {
+                flex-direction: column;
+                max-height: none;
+                height: auto;
+                margin: 20px;
+            }
+            .brand-side {
+                padding: 40px 20px;
+            }
+            .form-side {
+                padding: 40px 30px;
+            }
+            .status-indicators {
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-container">
+        
+        <div class="brand-side">
+            <div class="logo-area">
+                <div class="logo-title">GRUPO <span>/ ARI</span></div>
+            </div>
+
+            <div class="badge-red">Red Grupo ARI</div>
+
+            <div class="welcome-text-left">
+                <h2>Bienvenido a la red</h2>
+                <p>Accede a Internet de forma segura desde las instalaciones de Grupo ARI.</p>
+            </div>
+
+            <div class="status-indicators">
+                <div class="status-item">
+                    <span class="status-dot"></span>
+                    Activa
+                </div>
+                <div class="status-item">
+                    <span class="status-dot"></span>
+                    Segura
+                </div>
+                <div class="status-item">
+                    <span class="status-dot"></span>
+                    Estable
+                </div>
+            </div>
+        </div>
+
+        <div class="form-side" id="right-side-content">
+            
+            <div id="login-form-view">
+                <div class="form-header">
+                    <h1>Bienvenido a la red</h1>
+                    <p>Conéctate con tus credenciales o como visitante para acceder a Internet.</p>
+                </div>
+
+                <div class="role-selector">
+                    <button type="button" class="role-btn active" id="btn-visitante" onclick="switchRole('visitante')">Visitante</button>
+                    <button type="button" class="role-btn" id="btn-empleado" onclick="switchRole('empleado')">Empleado</button>
+                </div>
+
+                <form id="auth-form" onsubmit="handleConnect(event)">
+                    <div id="dynamic-inputs">
+                        <div class="input-group">
+                            <label>Nombre de Visitante</label>
+                            <input type="text" placeholder="Ej. Juan Pérez" required>
+                        </div>
+                    </div>
+
+                    <div class="terms-box">
+                        <strong>Términos de uso y Política de Privacidad de Grupo ARI.</strong><br>
+                        Al conectarte a esta red Wi-Fi de cortesía, aceptas que el uso de la misma está sujeto a las normativas de seguridad internas del Grupo ARI. Queda estrictamente prohibido el acceso a sitios web de contenido malicioso, descargas ilegales P2P o cualquier actividad que comprometa el ancho de banda y la seguridad de la infraestructura corporativa. La empresa se reserva el derecho de monitorizar el tráfico de red de forma automatizada para mitigar ciberamenazas y garantizar la estabilidad del servicio a todos los usuarios concurrentes en las instalaciones.
+                    </div>
+
+                    <button type="submit" class="btn-connect">Conectar</button>
+                </form>
+
+                <div class="divider">o</div>
+
+                <button class="btn-temporal" onclick="handleConnect(event)">
+                    <span>🕒</span> Acceso temporal (30 min)
+                </button>
+            </div>
+
+            <div class="success-screen" id="success-view">
+                <div class="success-icon">✓</div>
+                <h1>¡Ya estás conectado!</h1>
+                <p style="color: var(--text-muted); margin-top: 10px; max-width: 400px; margin-inline: auto;">
+                    Tu dispositivo se ha autenticado correctamente. Ya puedes navegar y utilizar la red WiFi de Grupo ARI de forma segura.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        function switchRole(role) {
+            const btnVisitante = document.getElementById('btn-visitante');
+            const btnEmpleado = document.getElementById('btn-empleado');
+            const inputsContainer = document.getElementById('dynamic-inputs');
+
+            if (role === 'empleado') {
+                btnVisitante.classList.remove('active');
+                btnEmpleado.classList.add('active');
+                
+                inputsContainer.innerHTML = `
+                    <div class="input-group" style="animation: fadeIn 0.3s ease;">
+                        <label>Usuario</label>
+                        <input type="text" placeholder="nombre.apellido" required>
+                    </div>
+                    <div class="input-group" style="animation: fadeIn 0.3s ease;">
+                        <label>Contraseña</label>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                `;
+            } else {
+                btnEmpleado.classList.remove('active');
+                btnVisitante.classList.add('active');
+                
+                inputsContainer.innerHTML = `
+                    <div class="input-group" style="animation: fadeIn 0.3s ease;">
+                        <label>Nombre de Visitante</label>
+                        <input type="text" placeholder="Ej. Juan Pérez" required>
+                    </div>
+                `;
+            }
+        }
+
+        function handleConnect(event) {
+            event.preventDefault();
+            const loginView = document.getElementById('login-form-view');
+            const successView = document.getElementById('success-view');
+
+            loginView.style.display = 'none';
+            successView.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
